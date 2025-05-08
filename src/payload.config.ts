@@ -9,6 +9,8 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { adminAuthPlugin } from 'payload-auth-plugin'
+import { GoogleAuthProvider } from 'payload-auth-plugin/providers'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,7 +33,17 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    payloadCloudPlugin(),
+    // payloadCloudPlugin(),
     // storage-adapter-placeholder
+    adminAuthPlugin({
+      accountsCollectionSlug:
+      providers: [
+        GoogleAuthProvider({
+          
+          client_id: process.env.GOOGLE_CLIENT_ID as string,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
+      ],
+    }),
   ],
 })
