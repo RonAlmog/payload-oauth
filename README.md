@@ -65,3 +65,13 @@ That's it! The Docker instance will help you get up and running quickly while al
 ## Questions
 
 If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+
+CALLBACK URLS:
+
+FOR ADMIN
+http://example.com/api/admin/oauth/callback/google
+http://localhost:3000/api/admin/oauth/callback/google
+
+FOR APP
+http://example.com/api/{app_name}/oauth/callback/google
+http://localhost:3000/api/{app_name}/oauth/callback/google
