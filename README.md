@@ -75,3 +75,4 @@ http://localhost:3000/api/admin/oauth/callback/google
 FOR APP
 http://example.com/api/{app_name}/oauth/callback/google
 http://localhost:3000/api/{app_name}/oauth/callback/google
+http://localhost:3000/api/app/oauth/callback/google
