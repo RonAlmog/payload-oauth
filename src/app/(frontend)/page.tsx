@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url'
 
 import config from '@/payload.config'
 import './styles.css'
+import { Button } from '@/components/ui/button'
 
 export default async function HomePage() {
   const headers = await getHeaders()
@@ -15,5 +16,11 @@ export default async function HomePage() {
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
 
-  return <h1 className="text-3xl font-bold underline text-rose-400">Hello world!</h1>
+  return (
+    <>
+      <h1 className="text-3xl font-bold underline text-rose-400">Hello world!</h1>
+
+      <Button variant="ghost">Click me!</Button>
+    </>
+  )
 }
