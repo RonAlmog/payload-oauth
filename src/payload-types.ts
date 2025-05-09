@@ -70,6 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     'admin-accounts': AdminAccount;
+    'app-users': AppUser;
+    'app-accounts': AppAccount;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -79,6 +81,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'admin-accounts': AdminAccountsSelect<false> | AdminAccountsSelect<true>;
+    'app-users': AppUsersSelect<false> | AppUsersSelect<true>;
+    'app-accounts': AppAccountsSelect<false> | AppAccountsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -192,6 +196,59 @@ export interface AdminAccount {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "app-users".
+ */
+export interface AppUser {
+  id: string;
+  name?: string | null;
+  email: string;
+  hashedPassword?: string | null;
+  salt?: string | null;
+  hashIterations?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "app-accounts".
+ */
+export interface AppAccount {
+  id: string;
+  name?: string | null;
+  picture?: string | null;
+  user: string | AppUser;
+  issuerName: string;
+  scope?: string | null;
+  sub: string;
+  passkey?: {
+    credentialId: string;
+    publicKey:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    counter: number;
+    transports:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    deviceType: string;
+    backedUp: boolean;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -208,6 +265,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admin-accounts';
         value: string | AdminAccount;
+      } | null)
+    | ({
+        relationTo: 'app-users';
+        value: string | AppUser;
+      } | null)
+    | ({
+        relationTo: 'app-accounts';
+        value: string | AppAccount;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -289,6 +354,43 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "admin-accounts_select".
  */
 export interface AdminAccountsSelect<T extends boolean = true> {
+  name?: T;
+  picture?: T;
+  user?: T;
+  issuerName?: T;
+  scope?: T;
+  sub?: T;
+  passkey?:
+    | T
+    | {
+        credentialId?: T;
+        publicKey?: T;
+        counter?: T;
+        transports?: T;
+        deviceType?: T;
+        backedUp?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "app-users_select".
+ */
+export interface AppUsersSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  hashedPassword?: T;
+  salt?: T;
+  hashIterations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "app-accounts_select".
+ */
+export interface AppAccountsSelect<T extends boolean = true> {
   name?: T;
   picture?: T;
   user?: T;
