@@ -9,9 +9,11 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { adminAuthPlugin } from 'payload-auth-plugin'
+import { adminAuthPlugin, appAuthPlugin } from 'payload-auth-plugin'
 import { GoogleAuthProvider } from 'payload-auth-plugin/providers'
 import { AdminAccounts } from './collections/AdminAccounts'
+import { AppUsers } from './collections/AppUsers'
+import { AppAccounts } from './collections/AppAccounts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +30,7 @@ export default buildConfig({
     },
   },
   // **** Collections ***
-  collections: [Users, Media, AdminAccounts],
+  collections: [Users, Media, AdminAccounts, AppUsers, AppAccounts],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -44,6 +46,19 @@ export default buildConfig({
     adminAuthPlugin({
       accountsCollectionSlug: AdminAccounts.slug,
       allowSignUp: true, // usually in production: false
+      providers: [
+        GoogleAuthProvider({
+          client_id: process.env.GOOGLE_CLIENT_ID as string,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
+      ],
+    }),
+    appAuthPlugin({
+      name: 'app', // needs to match whatever is in auth.ts
+      allowAutoSignUp: true,
+      secret: process.env.APP_AUTH_SECRET as string,
+      usersCollectionSlug: AppUsers.slug,
+      accountsCollectionSlug: AppAccounts.slug,
       providers: [
         GoogleAuthProvider({
           client_id: process.env.GOOGLE_CLIENT_ID as string,
