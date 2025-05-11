@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
-import { getUser } from './actions/get-user'
-import Navbar from './components/navbar'
+import Navbar from '../components/navbar'
+import { getUser } from '../actions/get-user'
 
 // Template is like layout, but keeps refreshing when things changes inside.
 // so the user validation will be in every page inside it.
@@ -10,9 +10,9 @@ export default async function Template(props: { children: React.ReactNode }) {
   const { children } = props
 
   const user = getUser()
+  console.log({ user })
   if (!user) {
-    redirect('/login')
-    return null
+    redirect('/sign-in')
   }
 
   return (
