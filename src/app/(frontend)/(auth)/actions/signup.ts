@@ -1,16 +1,16 @@
 'use server'
 
+import { AppUser } from '@/payload-types'
 import config from '@payload-config'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { Customer } from '@/payload-types'
+
 import { getPayload } from 'payload'
 
 // we cannot import the type from payload/dist.../login so we define it here
 export type Result = {
   exp?: number
   token?: string
-  user?: Customer
+  user?: AppUser
 }
 
 export interface SignupResponse {
@@ -23,11 +23,11 @@ interface SignupParams {
   password: string
 }
 
-export async function signup({ email, password }: SignupParams): Promise<SignupResponse> {
+export async function signupUser({ email, password }: SignupParams): Promise<SignupResponse> {
   const payload = await getPayload({ config })
   try {
     await payload.create({
-      collection: 'customers',
+      collection: 'app-users',
       data: {
         email,
         password,
@@ -35,7 +35,7 @@ export async function signup({ email, password }: SignupParams): Promise<SignupR
     })
 
     const result: Result = await payload.login({
-      collection: 'customers',
+      collection: 'app-users',
       data: {
         email,
         password,

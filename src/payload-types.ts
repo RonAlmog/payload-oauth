@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    'app-users': AppUserAuthOperations;
   };
   blocks: {};
   collections: {
@@ -93,15 +94,37 @@ export interface Config {
   globals: {};
   globalsSelect: {};
   locale: null;
-  user: User & {
-    collection: 'users';
-  };
+  user:
+    | (User & {
+        collection: 'users';
+      })
+    | (AppUser & {
+        collection: 'app-users';
+      });
   jobs: {
     tasks: unknown;
     workflows: unknown;
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface AppUserAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -201,12 +224,18 @@ export interface AdminAccount {
 export interface AppUser {
   id: string;
   name?: string | null;
-  email: string;
   hashedPassword?: string | null;
-  salt?: string | null;
   hashIterations?: number | null;
   updatedAt: string;
   createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -275,10 +304,15 @@ export interface PayloadLockedDocument {
         value: string | AppAccount;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'app-users';
+        value: string | AppUser;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -288,10 +322,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: string;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'app-users';
+        value: string | AppUser;
+      };
   key?: string | null;
   value?:
     | {
@@ -379,12 +418,17 @@ export interface AdminAccountsSelect<T extends boolean = true> {
  */
 export interface AppUsersSelect<T extends boolean = true> {
   name?: T;
-  email?: T;
   hashedPassword?: T;
-  salt?: T;
   hashIterations?: T;
   updatedAt?: T;
   createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

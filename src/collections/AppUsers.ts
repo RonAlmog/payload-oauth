@@ -4,9 +4,10 @@ import { deleteLinkedAccounts } from 'payload-auth-plugin/collection/hooks'
 
 export const AppUsers: CollectionConfig = withAppUsersCollection({
   slug: 'app-users',
+  auth: true,
   admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name'],
+    useAsTitle: 'email',
+    defaultColumns: ['email'],
   },
   hooks: {
     afterDelete: [deleteLinkedAccounts('app-accounts')],

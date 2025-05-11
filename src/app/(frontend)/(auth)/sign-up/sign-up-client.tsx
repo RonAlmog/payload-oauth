@@ -32,7 +32,7 @@ import { toast } from 'sonner'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { cookies as getCookies } from 'next/headers'
-import { loginUser } from '../actions/login'
+import { signupUser } from '../actions/signup'
 
 const SignUpClient = () => {
   const { signup } = appClient({ name: 'app' })
@@ -47,7 +47,7 @@ const SignUpClient = () => {
   })
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
-    const res = await loginUser(values)
+    const res = await signupUser(values)
 
     if (res.error) {
       toast.error('Error', {

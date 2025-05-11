@@ -31,6 +31,7 @@ import { signInSchema } from '@/lib/schemas'
 import { toast } from 'sonner'
 import { appClient } from 'payload-auth-plugin/client'
 import { onGoogleAppSignin } from '@/lib/auth'
+import { loginUser } from '../actions/login'
 
 const LoginClient = () => {
   const { signin } = appClient({ name: 'app' })
@@ -47,35 +48,36 @@ const LoginClient = () => {
 
   async function onSubmit(values: z.infer<typeof signInSchema>) {
     const { email, password } = values
+    // console.log({ values })
 
-    const { data, message, isSuccess, isError } = await signin().password({
-      email: email,
-      password: password,
-    })
+    // const { data, message, isSuccess, isError } = await signin().password({
+    //   email: email,
+    //   password: password,
+    // })
 
-    console.log({ data })
+    // console.log({ data, message, isSuccess, isError })
 
-    if (isError) {
-      toast.error('Error', {
-        description: message || 'Email or password do not match our records',
-      })
-      console.log(message)
-    }
-    if (isSuccess) {
-      toast.success('Logged in!')
-      router.push('/dashboard')
-    }
-
-    // const result = await loginUser({ email, password })
-    // console.log({ result })
-    // if (result.success) {
+    // if (isError) {
+    //   toast.error('Error', {
+    //     description: message || 'Email or password do not match our records',
+    //   })
+    //   console.log(message)
+    // }
+    // if (isSuccess) {
     //   toast.success('Logged in!')
     //   router.push('/dashboard')
-    // } else {
-    //   toast.error('Error', {
-    //     description: result.error || 'Email or password do not match our records',
-    //   })
     // }
+
+    const result = await loginUser({ email, password })
+    console.log({ result })
+    if (result.success) {
+      toast.success('Logged in!')
+      router.push('/dashboard')
+    } else {
+      toast.error('Error', {
+        description: result.error || 'Email or password do not match our records',
+      })
+    }
   }
 
   const handleGoogleSignin = async () => {

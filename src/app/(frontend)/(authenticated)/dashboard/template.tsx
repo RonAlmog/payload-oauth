@@ -10,7 +10,7 @@ export default async function Template(props: { children: React.ReactNode }) {
   const { children } = props
 
   const user = getUser()
-  console.log({ user })
+  // console.log({ user })
   if (!user) {
     redirect('/sign-in')
   }

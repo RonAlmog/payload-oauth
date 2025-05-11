@@ -4,6 +4,7 @@ import { cookies, headers as getHeaders } from 'next/headers'
 import config from '@payload-config'
 import { AppUser } from '@/payload-types'
 import { login } from '@payloadcms/next/auth'
+import { getPayload } from 'payload'
 
 interface LoginProps {
   email: string
@@ -20,15 +21,17 @@ export type Result = {
   user?: AppUser
 }
 export async function loginUser({ email, password }: LoginProps): Promise<LoginResponse> {
+  const payload = await getPayload({ config })
   try {
-    const result: Result = await login({
+    const result = await payload.login({
       collection: 'app-users',
-      config,
-      email,
-      password,
+      data: {
+        email,
+        password,
+      },
     })
 
-    console.log({ result })
+    // console.log({ result })
 
     if (result.token) {
       const cookieStore = await cookies()
