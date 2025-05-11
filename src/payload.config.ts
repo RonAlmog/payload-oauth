@@ -10,10 +10,11 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { adminAuthPlugin, appAuthPlugin } from 'payload-auth-plugin'
-import { GoogleAuthProvider } from 'payload-auth-plugin/providers'
+import { GoogleAuthProvider, PasswordProvider } from 'payload-auth-plugin/providers'
 import { AdminAccounts } from './collections/AdminAccounts'
 import { AppUsers } from './collections/AppUsers'
 import { AppAccounts } from './collections/AppAccounts'
+import { resendAdapter } from '@payloadcms/email-resend'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -26,9 +27,14 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
-      afterLogin: ['/components/AuthButton#AuthButton'],
+      // afterLogin: ['/components/AuthButton#AuthButton'],
     },
   },
+  email: resendAdapter({
+    defaultFromAddress: 'ron@realio.ca',
+    defaultFromName: 'Admin',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
   // **** Collections ***
   collections: [Users, Media, AdminAccounts, AppUsers, AppAccounts],
   editor: lexicalEditor(),
@@ -60,6 +66,7 @@ export default buildConfig({
       usersCollectionSlug: AppUsers.slug,
       accountsCollectionSlug: AppAccounts.slug,
       providers: [
+        PasswordProvider(),
         GoogleAuthProvider({
           client_id: process.env.GOOGLE_CLIENT_ID as string,
           client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
