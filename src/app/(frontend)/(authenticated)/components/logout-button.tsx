@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { LogOut } from 'lucide-react'
+
+import { appClient } from 'payload-auth-plugin/client'
 import { logout } from '../actions/logout'
 
 export default function LogoutButton() {
@@ -11,20 +13,25 @@ export default function LogoutButton() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
+  const {} = appClient({ name: 'app' })
+
   async function handleLogout() {
     setIsPending(true)
     setError(null)
 
-    const result = await logout()
-
-    setIsPending(false)
-
-    if (result.success) {
-      // Redirect to home page after successful logout
-      router.push('/')
-    } else {
-      // Display error message
-      setError(result.error || 'Logout failed')
+    try {
+      const res = await logout()
+      if (res.success) {
+        // Redirect to home page after successful logout
+        router.push('/')
+      } else {
+        // Display error message
+        setError(res.error || 'Logout failed')
+      }
+    } catch (error) {
+      setError('Logout failed')
+    } finally {
+      setIsPending(false)
     }
   }
 
