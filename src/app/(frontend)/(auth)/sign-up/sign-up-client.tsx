@@ -24,15 +24,16 @@ import {
 import { InputPlus } from '@/components/button-plus'
 import { signUpSchema } from '@/lib/schemas'
 import { appClient } from 'payload-auth-plugin/client'
-import { onGoogleAppSignin } from '@/lib/auth'
+import { handleAppUserSignup, onGoogleAppSignin } from '@/lib/auth'
 import { redirect, useRouter } from 'next/navigation'
-import { KeyRound, MailIcon, UserIcon } from 'lucide-react'
+import { GithubIcon, KeyRound, MailIcon, UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { cookies as getCookies } from 'next/headers'
 import { signupUser } from '../actions/signup'
+import LoadingButton from '@/components/loading-button'
 
 const SignUpClient = () => {
   const { signup } = appClient({ name: 'app' })
@@ -47,34 +48,43 @@ const SignUpClient = () => {
   })
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
-    const res = await signupUser(values)
-
-    if (res.error) {
-      toast.error('Error', {
-        description: res.error || 'Could not sign up',
-      })
-    }
-    if (res.success) {
-      toast.success('Signed up!')
-      router.push('/dashboard')
-    }
-
-    // const { data, message, isSuccess, isError } = await signup().password({
-    //   email: email,
-    //   password: password,
-    // })
-
-    // if (isError) {
+    // const res = await signupUser(values)
+    // if (res.error) {
     //   toast.error('Error', {
-    //     description: message || 'Could not sign up',
+    //     description: res.error || 'Could not sign up',
     //   })
-    //   console.log(message)
     // }
-    // if (isSuccess) {
+    // if (res.success) {
     //   toast.success('Signed up!')
     //   router.push('/dashboard')
     // }
+
+    const { data, message, isSuccess, isError } = await handleAppUserSignup(values)
+    console.log({ data, message, isSuccess, isError })
+    if (isError) {
+      toast.error('Error', {
+        description: message || 'Could not sign up',
+      })
+      console.log(message)
+    }
+    if (isSuccess) {
+      toast.success('Signed up!')
+      router.push('/dashboard')
+    }
   }
+
+  const handleGoogleSignin = async () => {
+    const { data, message, isSuccess, isError } = await onGoogleAppSignin()
+
+    if (isError) {
+      console.log(message)
+    }
+    if (isSuccess) {
+      router.push('/admin')
+    }
+  }
+
+  const handleGitHubSignIn = async () => {}
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -132,6 +142,18 @@ const SignUpClient = () => {
             </Button>
           </form>
         </Form>
+        <div className="mt-4">
+          <LoadingButton pending={false} onClick={handleGoogleSignin}>
+            <GithubIcon className=" size-4 mr-2" />
+            Sign up with Google
+          </LoadingButton>
+        </div>
+        <div className="mt-4">
+          <LoadingButton pending={false} onClick={handleGitHubSignIn}>
+            <GithubIcon className=" size-4 mr-2" />
+            Sign up with GitHub
+          </LoadingButton>
+        </div>
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">

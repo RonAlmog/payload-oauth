@@ -1,7 +1,18 @@
 import { appClient } from 'payload-auth-plugin/client'
 import { getCurrentUser } from 'payload-auth-plugin/client/hooks'
 
-const { signin, refresh } = appClient({ name: 'app' })
+const { signin, signup, refresh } = appClient({ name: 'app' })
+
+interface SigninValues {
+  email: string
+  password: string
+}
+
+interface SignupValues {
+  email: string
+  password: string
+  profile?: Record<string, any>
+}
 
 export const getUser = async () => {
   const res = await getCurrentUser({ name: 'app' }, { fields: ['email'] })
@@ -21,4 +32,18 @@ export const onGoogleAppSignin = async () => {
 export const handleRefresh = async () => {
   const res = await refresh()
   return res
+}
+
+export const handleAppUserSignup = async (values: SignupValues) => {
+  console.log('received values:', values)
+  const { password } = signup()
+  const response = await password(values)
+  console.log({ response })
+  return response
+}
+
+export const handleAppUserSignin = async (values: SigninValues) => {
+  const { password } = signin()
+  const response = await password(values)
+  return response
 }

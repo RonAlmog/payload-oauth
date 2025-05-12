@@ -226,6 +226,7 @@ export interface AppUser {
   name?: string | null;
   hashedPassword?: string | null;
   hashIterations?: number | null;
+  role?: ('user' | 'superuser') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -420,6 +421,7 @@ export interface AppUsersSelect<T extends boolean = true> {
   name?: T;
   hashedPassword?: T;
   hashIterations?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
