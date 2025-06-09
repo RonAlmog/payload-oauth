@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import Cookies from 'js-cookie'
 
 import { LogOut } from 'lucide-react'
 
@@ -20,14 +21,16 @@ export default function LogoutButton() {
     setError(null)
 
     try {
-      const res = await logout()
-      if (res.success) {
-        // Redirect to home page after successful logout
-        router.push('/')
-      } else {
-        // Display error message
-        setError(res.error || 'Logout failed')
-      }
+      // const res = await logout()
+      Cookies.remove('__app-session-token') // Remove the HTTP-only cookie
+      console.log('removed cookie')
+      //if (res.success) {
+      // Redirect to home page after successful logout
+      router.push('/')
+      // } else {
+      // Display error message
+      //   setError(res.error || 'Logout failed')
+      // }
     } catch (error) {
       setError('Logout failed')
     } finally {

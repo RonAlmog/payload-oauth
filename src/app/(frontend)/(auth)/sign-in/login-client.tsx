@@ -87,7 +87,8 @@ const LoginClient = () => {
       console.log(message)
     }
     if (isSuccess) {
-      router.push('/admin')
+      router.push('/dashboard')
+      toast.success('Logged in with Google!')
     }
   }
 

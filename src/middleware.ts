@@ -3,7 +3,8 @@ import { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   // check for cookie
-  const payloadToken = request.cookies.get('payload-token')
+  // const payloadToken = request.cookies.get('payload-token')
+  const payloadToken = request.cookies.get('__app-session-token')
   if (!payloadToken) {
     return NextResponse.redirect(new URL('/sign-in', request.url))
   }

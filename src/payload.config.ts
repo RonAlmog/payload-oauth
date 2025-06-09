@@ -27,7 +27,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
-      // afterLogin: ['/components/AuthButton#AuthButton'],
+      afterLogin: ['/components/AuthButton#AuthButton'],
     },
   },
   email: resendAdapter({

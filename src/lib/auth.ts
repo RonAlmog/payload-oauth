@@ -14,6 +14,15 @@ interface SignupValues {
   profile?: Record<string, any>
 }
 
+export const logoutUser = async () => {
+  const res = await fetch('http://localhost:3000/api/app-users/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
 export const getUser = async () => {
   const res = await getCurrentUser({ name: 'app' }, { fields: ['email'] })
   return res
